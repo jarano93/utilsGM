@@ -1,0 +1,8 @@
+TODO
+
+npc-generator
+
+combatantant archetypes + generator
+
+kin system
+(using tinydb for storage)

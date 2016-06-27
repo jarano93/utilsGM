@@ -385,7 +385,7 @@ class Clan:
                 print d_head + mid + p.descriptor()
             else:
                 print d_head + end + p.descriptor()
-            for p in self.persons_m[couple][:-1]:
+            for p in self.persons_m[couple][1:]:
                 print d_head + mid + p.descriptor()
         print head + couple.descriptor()
 

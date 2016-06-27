@@ -1,0 +1,12 @@
+#!/usr/bin/zsh
+
+lines=$(wc -l mod | grep -Po "\d+");
+for ((i = 1; i <= $lines; i++));
+do
+    l="$(echo $i)p"
+    echo $l
+    trimLine=$(sed -n $l mod | grep -Po '<a href="/name/\w+">\w+</a>' | grep -Po '>\w+<' | grep -Po '\w+');
+    echo $trimLine;
+    $(grep -Pv "$trimLine" prep > temp)
+    cat temp > prep
+done

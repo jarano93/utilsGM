@@ -303,6 +303,8 @@ class Clan:
     def recurse_paternal2(self, couple, head, depth, outers, path):
         print head + couple.descriptor()
         c_flag = couple in self.couples_p
+        if c_flag:
+            c_flag = len(self.couples_p[couple]) > 0
         d_head = ""
         end = "└── "
         mid = "├── "
@@ -336,6 +338,7 @@ class Clan:
         # self.recurse_maternal(self.root_m, "", 0)
         self.recurse_maternal2(self.root_m, "", 0, [], [True])
 
+    # DEPRECATED
     def recurse_maternal(self, couple, lead, depth):
         i_lead, i_end, p_lead, p_end = "", "", "", ""
         for d in xrange(depth + 1):
@@ -349,10 +352,7 @@ class Clan:
             print i_lead + p.descriptor()
         print lead + couple.descriptor()
 
-    # DEPRECATED
     def recurse_maternal2(self, couple, head, depth, outers, path):
-        # print outers
-        # print path
         c_flag = couple in self.couples_m
         if c_flag:
             c_flag = len(self.couples_m[couple]) > 0
@@ -377,17 +377,16 @@ class Clan:
                 outers.pop(0)
             for c in self.couples_m[couple][1:]:
                 self.recurse_maternal2(c, d_head + mid, depth + 1, outers, path + [False])
-        try:
+        if len(self.persons_m[couple]) > 0:
             p = self.persons_m[couple][0]
             if c_flag:
                 print d_head + mid + p.descriptor()
+            elif couple in self.couples_m and self.couples_m[couple] == []:
+                print d_head + mid + p.descriptor()
             else:
                 print d_head + end + p.descriptor()
-        except: pass
-        for p in self.persons_m[couple][:-1]:
-            print d_head + mid + p.descriptor()
-        # print outers
-        # print path
+            for p in self.persons_m[couple][:-1]:
+                print d_head + mid + p.descriptor()
         print head + couple.descriptor()
 
     def new_lead(self, lead, heads):

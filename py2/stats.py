@@ -72,26 +72,12 @@ def stat3(stat_args):
             s[3] = s[0] + s[1]
         print "EV: %0.2f\tSD: %0.2f\tEV - SD: %0.2f\tEV + SD: %0.2f" % (s[0], s[1], s[2], s[3])
 
-def stat_list(die, N):
-    for n in xrange(N):
-        val = n + 1
-        s = []
-        s.append(get_mean(die, val))
-        # s.append(get_var(die, val))
-        s.append(get_dev(die, val))
-        s.append(s[0] - s[1])
-        s.append(s[0] + s[1])
-        if val == 1:
-            print "Die: %dd%d\tEV: %0.2f\tSD: %0.2f\tEV - SD: %0.2f\tEV + SD: %0.2f" % (val, die, s[0], s[1], s[2], s[3])
-        else:
-            print "Dice: %dd%d\tEV: %0.2f\tSD: %0.2f\tEV - SD: %0.2f\tEV + SD: %0.2f" % (val, die, s[0], s[1], s[2], s[3])
-
-def stat_d6pool(check, min_hit, pool_num):
+def stat_d6check(check, min_hit, pool_num):
     if check > pool_num:
         print "check larger than pool -- no success"
         return
     elif min_hit > 6:
-        print "hit larger than 6 -- no success"
+        print "minimum hit larger than 6 -- no success"
         return
     elif min_hit < 1:
         print "minimum hit value less than one"
@@ -111,6 +97,34 @@ def stat_d6pool(check, min_hit, pool_num):
     s[3] = s[0] + s[1]
     print "EV: %0.2f\tSD: %0.2f\tEV - SD: %0.2f\tEV + SD: %0.2f" % (s[0], s[1], s[2], s[3])
 
+def stat_d6pool(min_hit, pool):
+    if min_hit < 1:
+        print "minimum hit value less than one"
+        return
+    elif min_hit > 6:
+        print "minimum hit value greater than six"
+        return
+    prob = float(7 - min_hit) / 6
+    stats = [get_bin_mean(pool, prob), get_bin_dev(pool, prob), 0, 0]
+    stats[2] = stats[0] - stats[1]
+    stats[3] = stats[0] + stats[1]
+    print "Rolled %dd6\tmin hit : %d\thit%% per roll: %0.4f%%" % (pool, min_hit, prob)
+    print "EV: %0.2f\tSD: %0.2f\tEV - SD: %0.2f\tEV + SD: %0.2f" % (stats[0], stats[1], stats[2], stats[3])
+
+def stat_list(die, N):
+    for n in xrange(N):
+        val = n + 1
+        s = []
+        s.append(get_mean(die, val))
+        # s.append(get_var(die, val))
+        s.append(get_dev(die, val))
+        s.append(s[0] - s[1])
+        s.append(s[0] + s[1])
+        if val == 1:
+            print "Die: %dd%d\tEV: %0.2f\tSD: %0.2f\tEV - SD: %0.2f\tEV + SD: %0.2f" % (val, die, s[0], s[1], s[2], s[3])
+        else:
+            print "Dice: %dd%d\tEV: %0.2f\tSD: %0.2f\tEV - SD: %0.2f\tEV + SD: %0.2f" % (val, die, s[0], s[1], s[2], s[3])
+
 
 # DEPRECATED
 def stat_sixes(N):
@@ -127,7 +141,9 @@ def stat_main(args):
     if args[0] == 'list':
         stat_list(int(args[1]), int(args[2]))
     elif args[0] == 'd6pool':
-        stat_d6pool(int(args[1]), int(args[2]), int(args[3]))
+        stat_d6pool(int(args[1]), int(args[2]))
+    elif args[0] == 'd6check':
+        stat_d6check(int(args[1]), int(args[2]), int(args[3]))
     else:
         stat3(p.roll_parse2(args))
 

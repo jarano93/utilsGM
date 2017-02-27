@@ -99,12 +99,13 @@ def stat_d6pool(check, min_hit, pool_num):
     success = 0
     print "Rolled %dd6,\tminimum hit: %d\t check value: %d" % (pool_num, min_hit, check)
     prob = float(7 - min_hit) / 6
-    print "hit probability per roll: %0.4f%%" % (prob)
+    print "hit%%  per roll:\t%0.4f%%" % (prob)
     for k in xrange(check, pool_num + 1):
         temp = m.pow(prob, k) * m.pow(1 - prob, pool_num - k)
-        temp = temp * m.factorial(pool_num) / (m.factorial(k) * m.factorial(pool_num - k))
+        temp = temp / (m.factorial(k) * m.factorial(pool_num - k))
         success += temp
-    print "success probability: %0.4f%%" % (success)
+    success *= m.factorial(pool_num)
+    print "pool%% success:\t%0.4f%%" % (success)
     s = [get_bin_mean(pool_num, prob), get_bin_dev(pool_num, prob), 0, 0]
     s[2] = s[0] - s[1]
     s[3] = s[0] + s[1]
